@@ -6,5 +6,5 @@ module.exports = async function (deployer, network, accounts) {
   await deployer.deploy(Crowdsale, Token.address);
 
   let tokenContractInstance = await Token.deployed();
-  await tokenContractInstance.setCrowdsaleContract(Crowdsale.address)
+  tokenContractInstance.setCrowdsaleContract(Crowdsale.address, { from: accounts[0] })
 };
