@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.23;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
@@ -11,8 +11,8 @@ contract SunmaitCrowdsale is Ownable {
 
     SunmaitToken public tokenReward;
 
-    uint256 public phase1weiRaised = 0;
-    uint256 public phase2weiRaised = 0;
+    uint256 public phase1weiRaised = 1;
+    uint256 public phase2weiRaised = 1;
     uint256 public totalRaised = 0;
 
     uint256 public phase1OpeningTime;
@@ -20,44 +20,49 @@ contract SunmaitCrowdsale is Ownable {
     uint256 public phase2OpeningTime;
     uint256 public phase2ClosingTime;
 
-    uint256 public constant PHASE1_RATE = 20000;
-    uint256 public constant PHASE2_RATE = 15000;
+    address public wallet;
 
-    // TODO: Pass parameters using constructor
-    constructor (address tokenRewardAddress) public {
+    uint256 public constant PHASE1_RATE = 2000;
+    uint256 public constant PHASE2_RATE = 1500;
+
+    event TokenPurchase(address purchaser, uint256 ethValue, uint256 tokenAmount);
+
+    constructor (address tokenRewardAddress, address walletAddress) public {
         require(tokenRewardAddress != address(0));
+        require(walletAddress != address(0));
 
         tokenReward = SunmaitToken(tokenRewardAddress);
+        wallet = walletAddress;
 
-        phase1OpeningTime = now;
+        phase1OpeningTime = tokenReward.icoStartTimeStamp();
         phase1ClosingTime = phase1OpeningTime + (2 * 7 * 24 * 60 * 60); // 2 weeks (in seconds)
 
         phase2OpeningTime = phase1ClosingTime + (7 * 24 * 60 * 60); // 1 week after 1st phase closing (in seconds)
-        phase2ClosingTime = phase2OpeningTime + (7 * 24 * 60 * 60); // duration of 2nd phase - 1 week (in seconds)
+        phase2ClosingTime = phase1OpeningTime + tokenReward.icoDurationSeconds(); // Total duration - 4 weeks (from token contract)
     }
 
     function () external payable {
         uint256 weiAmount = msg.value;
         State currentState = getCurrentState();
 
-        require(currentState != State.NotRunning);
-
-        _preValidatePurchase(msg.sender, weiAmount, currentState);
+        _validatePurchase(msg.sender, weiAmount, currentState);
 
         uint256 tokenAmount = 0;
         if (currentState == State.Phase1) {
             tokenAmount = weiAmount.mul(PHASE1_RATE);
-            phase1weiRaised.add(weiAmount);
+            phase1weiRaised = phase1weiRaised.add(weiAmount);
         }
         else if (currentState == State.Phase2) {
             tokenAmount = weiAmount.mul(PHASE2_RATE);
-            phase2weiRaised.add(weiAmount);
+            phase2weiRaised = phase2weiRaised.add(weiAmount);
         }
 
-        totalRaised.add(weiAmount);
+        totalRaised = totalRaised.add(weiAmount);
 
         tokenReward.transferFromCrowdsale(msg.sender, tokenAmount);
-        // TODO: move ethers to wallet
+        wallet.transfer(msg.value);
+
+        emit TokenPurchase(msg.sender, msg.value, tokenAmount);
     }
 
     function getCurrentState() public view returns(State) {
@@ -73,7 +78,7 @@ contract SunmaitCrowdsale is Ownable {
         return currentState;
     }
 
-    function _preValidatePurchase(address beneficiary, uint256 weiAmount, State currentState) internal view {
+    function _validatePurchase(address beneficiary, uint256 weiAmount, State currentState) internal view {
         require(beneficiary != address(0));
         require(weiAmount != 0);
         require(currentState != State.NotRunning);

@@ -6,12 +6,15 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 contract SunmaitToken is StandardToken, Ownable {
     address private crowdsaleAddress_ = address(0);
 
+    string public name = "Sunmait Token";
+    string public symbol = "SNMT";
+    uint8 public decimals = 18;
+
     uint256 public icoStartTimeStamp;
     uint256 public icoDurationSeconds;
 
-    // TODO: Pass parameters using constructor
     constructor () public {
-        totalSupply_ = 100000 * (uint256(10) ** 10); // TODO: number of decimals
+        totalSupply_ = 100000 * (uint256(10) ** decimals);
 
         // solium-disable-next-line security/no-block-members
         icoStartTimeStamp = now;
@@ -27,8 +30,8 @@ contract SunmaitToken is StandardToken, Ownable {
         return true;
     }
 
-    // TODO: Check that msg.sender is crowdsale contract?
     function transferFromCrowdsale(address _to, uint256 _value) public whenIcoInProgress returns (bool) {
+        require(msg.sender == crowdsaleAddress_);
         return super.transfer(_to, _value);
     }
 
