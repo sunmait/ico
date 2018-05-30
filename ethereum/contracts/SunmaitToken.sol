@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract SunmaitToken is StandardToken, Ownable {
-    address private crowdsaleAddress_ = address(0);
+    address public crowdsaleAddress = address(0);
 
     string public name = "Sunmait Token";
     string public symbol = "SNMT";
@@ -22,16 +22,16 @@ contract SunmaitToken is StandardToken, Ownable {
     }
 
     function setCrowdsaleContract(address crowdsale) public onlyOwner returns (bool) {
-        require(crowdsaleAddress_ == address(0));
+        require(crowdsaleAddress == address(0));
 
-        crowdsaleAddress_ = crowdsale;
-        balances[crowdsaleAddress_] = totalSupply_;
+        crowdsaleAddress = crowdsale;
+        balances[crowdsaleAddress] = totalSupply_;
 
         return true;
     }
 
     function transferFromCrowdsale(address _to, uint256 _value) public whenIcoInProgress returns (bool) {
-        require(msg.sender == crowdsaleAddress_);
+        require(msg.sender == crowdsaleAddress);
         return super.transfer(_to, _value);
     }
 

@@ -17,8 +17,6 @@ const crowdsaleContract = web3.eth
     .contract(crowdsaleTokenArtifacts.abi)
     .at(crowdsaleContractAddress);
 
-// const tokenPurchaseEvent = crowdsaleContract.TokenPurchase();
-
 web3.eth.sendTransaction({ 
     from: web3.eth.accounts[0],
     to: crowdsaleContractAddress,
