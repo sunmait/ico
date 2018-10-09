@@ -61,13 +61,13 @@ contract SunmaitToken is StandardToken, Ownable {
         // solium-disable-next-line security/no-block-members
         require(now >= icoStartTimeStamp);
         // solium-disable-next-line security/no-block-members
-        require(now <= (icoEndTimeStamp));
+        require(now <= icoEndTimeStamp);
         _;
     }
 
     modifier whenIcoFinished() {
         // solium-disable-next-line security/no-block-members
-        require(now > (icoEndTimeStamp));
+        require(now > icoEndTimeStamp);
         _;
     }
 }

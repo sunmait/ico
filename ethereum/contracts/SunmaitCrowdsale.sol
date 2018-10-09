@@ -27,18 +27,24 @@ contract SunmaitCrowdsale is Ownable {
 
     event TokenPurchase(address purchaser, uint256 ethValue, uint256 tokenAmount);
 
-    constructor (address tokenRewardAddress, address walletAddress, uint256 phase1StartTime, uint256 phase1Duration, uint256 phase2Duration) public {
+    constructor (
+        address tokenRewardAddress,
+        address walletAddress,
+        uint256 phase1StartTime,
+        uint256 phase1DurationInDays,
+        uint256 phase2DurationInDays)
+    public {
         require(tokenRewardAddress != address(0));
         require(walletAddress != address(0));
 
         tokenReward = SunmaitToken(tokenRewardAddress);
         wallet = walletAddress;
 
-        phase1OpeningTime = phase1StartTime;
-        phase1ClosingTime = phase1OpeningTime.add(phase1Duration * 24 * 60 * 60);
+        phase1OpeningTime = phase1StartTime; //firsht phase start time (in seconds)
+        phase1ClosingTime = phase1OpeningTime.add(phase1DurationInDays * 24 * 60 * 60); //first phase duration (in seconds)
 
-        phase2OpeningTime = phase1ClosingTime; // starts immediatly after closing time of first phase
-        phase2ClosingTime = phase2OpeningTime.add(phase2Duration * 24 * 60 * 60); // Total duration
+        phase2OpeningTime = phase1ClosingTime; // second phase starts immediatly after closing time of first phase
+        phase2ClosingTime = phase2OpeningTime.add(phase2DurationInDays * 24 * 60 * 60); // Total duration (in seconds)
     }
 
     function () external payable {
