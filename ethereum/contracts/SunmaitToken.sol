@@ -2,30 +2,32 @@ pragma solidity ^0.4.21;
 
 import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./SunmaitCrowdsale.sol";
 
 contract SunmaitToken is StandardToken, Ownable {
     address public crowdsaleAddress = address(0);
+    SunmaitCrowdsale public crowdsaleContract;
 
     string public name = "Sunmait Token";
     string public symbol = "SNMT";
     uint8 public decimals = 18;
 
     uint256 public icoStartTimeStamp;
-    uint256 public icoDurationSeconds;
+    uint256 public icoEndTimeStamp;
 
     constructor () public {
         totalSupply_ = 100000 * (uint256(10) ** decimals);
-
-        // solium-disable-next-line security/no-block-members
-        icoStartTimeStamp = now;
-        icoDurationSeconds = 4 * 7 * 24 * 60 * 60; // 4 weeks (in seconds)
     }
 
     function setCrowdsaleContract(address crowdsale) public onlyOwner returns (bool) {
         require(crowdsaleAddress == address(0));
 
         crowdsaleAddress = crowdsale;
+        crowdsaleContract = SunmaitCrowdsale(crowdsale);
         balances[crowdsaleAddress] = totalSupply_;
+
+        icoStartTimeStamp = crowdsaleContract.getIcoStartTime();
+        icoEndTimeStamp = crowdsaleContract.getIcoEndTime();
 
         return true;
     }
@@ -59,13 +61,13 @@ contract SunmaitToken is StandardToken, Ownable {
         // solium-disable-next-line security/no-block-members
         require(now >= icoStartTimeStamp);
         // solium-disable-next-line security/no-block-members
-        require(now <= (icoStartTimeStamp + icoDurationSeconds));
+        require(now <= (icoEndTimeStamp));
         _;
     }
 
     modifier whenIcoFinished() {
         // solium-disable-next-line security/no-block-members
-        require(now > (icoStartTimeStamp + icoDurationSeconds));
+        require(now > (icoEndTimeStamp));
         _;
     }
 }

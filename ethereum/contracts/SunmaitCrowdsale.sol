@@ -27,18 +27,18 @@ contract SunmaitCrowdsale is Ownable {
 
     event TokenPurchase(address purchaser, uint256 ethValue, uint256 tokenAmount);
 
-    constructor (address tokenRewardAddress, address walletAddress) public {
+    constructor (address tokenRewardAddress, address walletAddress, uint256 phase1StartTime, uint256 phase1Duration, uint256 phase2Duration) public {
         require(tokenRewardAddress != address(0));
         require(walletAddress != address(0));
 
         tokenReward = SunmaitToken(tokenRewardAddress);
         wallet = walletAddress;
 
-        phase1OpeningTime = tokenReward.icoStartTimeStamp();
-        phase1ClosingTime = phase1OpeningTime + (2 * 7 * 24 * 60 * 60); // 2 weeks (in seconds)
+        phase1OpeningTime = phase1StartTime;
+        phase1ClosingTime = phase1OpeningTime.add(phase1Duration * 24 * 60 * 60);
 
-        phase2OpeningTime = phase1ClosingTime + (7 * 24 * 60 * 60); // 1 week after 1st phase closing (in seconds)
-        phase2ClosingTime = phase1OpeningTime + tokenReward.icoDurationSeconds(); // Total duration - 4 weeks (from token contract)
+        phase2OpeningTime = phase1ClosingTime; // starts immediatly after closing time of first phase
+        phase2ClosingTime = phase2OpeningTime.add(phase2Duration * 24 * 60 * 60); // Total duration
     }
 
     function () external payable {
@@ -82,5 +82,13 @@ contract SunmaitCrowdsale is Ownable {
         require(beneficiary != address(0));
         require(weiAmount != 0);
         require(currentState != State.NotRunning);
+    }
+
+    function getIcoStartTime() public view returns(uint256) {
+        return phase1OpeningTime;
+    }
+
+    function getIcoEndTime() public view returns(uint256) {
+        return phase2ClosingTime;
     }
 }
