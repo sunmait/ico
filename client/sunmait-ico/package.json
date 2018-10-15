@@ -1,0 +1,32 @@
+{
+  "name": "sunmait-ico",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "date-fns": "^1.29.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-notifications": "^1.4.3",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.0.4",
+    "redux": "^4.0.0",
+    "redux-promise-middleware": "^5.1.1",
+    "web3": "^1.0.0-beta.36"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
