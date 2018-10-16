@@ -7,7 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Button from '@material-ui/core/Button';
-import TokenPurchaseForm from '../common/forms/tokenPurchaseForm/TokenPurchaseForm';
+import TokenPurchaseForm from '../common/forms/tokenPurchaseForm/TokenPurchaseFormContainer';
 import normalizeValue from '../../helpers/normalizeValue';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './homePageStyles';

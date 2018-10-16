@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import HomePageComponent from './HomePageComponent';
-import { getCrowdsaleDetails, getUserBalance, buyTokens } from '../../redux/modules/crowdsale/crowdsaleActions';
+import { getCrowdsaleDetails, getUserBalance } from '../../redux/modules/crowdsale/crowdsaleActions';
 import { toggleModal } from '../../redux/modules/modal/modalAction';
 
 const mapStateToProps = (state) => ({
@@ -12,7 +12,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   getCrowdsaleDetails,
   getUserBalance,
-  buyTokens,
   toggleModal
 };
 

@@ -8,8 +8,8 @@ export const getCrowdsaleDetails = () => async (dispatch, getState) => {
   const { crowdsaleContract, tokenContract } = getState().contracts;
   
   const status = await crowdsaleContract.methods.getCurrentState().call();
-  const startDate = await crowdsaleContract.methods.getIcoStartTime().call();
-  const endDate = await crowdsaleContract.methods.getIcoEndTime().call();
+  const startDate = await crowdsaleContract.methods.phase1OpeningTime().call();
+  const endDate = await crowdsaleContract.methods.phase2ClosingTime().call();
   const phase1EndDate = await crowdsaleContract.methods.phase1ClosingTime().call();
   
   const phase1TokenPrice = await crowdsaleContract.methods.PHASE1_RATE().call();
@@ -62,13 +62,15 @@ export const getUserBalance = () => async (dispatch, getState) => {
   });
 };
 
-export const buyTokens = () => async (dispatch, getState) => {
+export const purchaseTokens = (tokenAmount) => async (dispatch, getState) => {
   const { currentAccount, localWeb3 } = getState().metaMask;
+  const { currentTokenPrice } = getState().crowdsale.crowdsaleDetails;
+  const eth = parseFloat(tokenAmount / currentTokenPrice).toString(10);
 
-  await localWeb3.eth.sendTransaction({ from: currentAccount, to: contractAddresses.sunmaitCrowdsale, value: localWeb3.utils.toWei('0.5')});
+  await localWeb3.eth.sendTransaction({ from: currentAccount, to: contractAddresses.sunmaitCrowdsale, value: localWeb3.utils.toWei(eth)});
 
   dispatch({
-    type: CONSTANTS.GET_USER_BALANCE.concat('LOH'),
-    payload: null
+    type: CONSTANTS.ADD_TOKENS_TO_BALANCE,
+    payload: tokenAmount,
   });
 }

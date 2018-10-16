@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { reducer as formReducer } from 'redux-form'
 import metaMask from './modules/metaMask/metaMaskReducer';
 import contracts from './modules/contracts/contractsReducer';
 import crowdsale from './modules/crowdsale/crowdsaleReducer';
@@ -8,7 +9,8 @@ const rootReducer = combineReducers({
   metaMask,
   contracts,
   crowdsale,
-  modal
+  modal,
+  form: formReducer,
 });
 
 export default rootReducer;

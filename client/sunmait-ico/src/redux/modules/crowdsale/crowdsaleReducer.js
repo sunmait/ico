@@ -15,11 +15,16 @@ const defaultState = {
 const setCrowdsaleDetails = (state, payload) => ({
   ...state,
   crowdsaleDetails: payload
-})
+});
 
 const setUserBalance = (state, payload) => ({
   ...state,
   userBalance: payload
+});
+
+const addTokensToBalance = (state, payload) => ({
+  ...state,
+  userBalance: +state.userBalance + +payload
 })
 
 export default (state = defaultState, action) => {
@@ -28,6 +33,8 @@ export default (state = defaultState, action) => {
       return setCrowdsaleDetails(state, action.payload);
     case CONSTANTS.GET_USER_BALANCE:
       return setUserBalance(state, action.payload);
+    case CONSTANTS.ADD_TOKENS_TO_BALANCE:
+      return addTokensToBalance(state, action.payload);
     default:
       return state;
   };

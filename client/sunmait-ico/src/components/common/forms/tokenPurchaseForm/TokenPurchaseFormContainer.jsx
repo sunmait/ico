@@ -1,17 +1,28 @@
-import React from 'react';
-import { connect } from 'react-redux';s
+import { compose } from 'redux';
+import { reduxForm, formValueSelector, reset } from 'redux-form'
+import { connect } from 'react-redux';
 import MODALS from '../../../../constants/modal';
+import tokenPurchaseForm from './TokenPurchaseForm';
 import modalDecorator from '../../modalDecorator/modalDecorator';
-import { buyTokens } from '../../../../redux/modules/crowdsale/crowdsaleActions';
+import { purchaseTokens } from '../../../../redux/modules/crowdsale/crowdsaleActions';
+
+const selector = formValueSelector('tokenPurchase');
+const resetForm = () => reset('tokenPurchase');
 
 const MapStateToProps = state => ({
-
+  tokenAmount: selector(state, 'tokens'),
+  exchangeRate: state.crowdsale.crowdsaleDetails.currentTokenPrice
 });
 
 const mapDispatchToProps = {
-  buyTokens
-}
+  purchaseTokens,
+  resetForm
+};
 
-const TokenPurchaseFormContainer = connect(MapStateToProps, mapDispatchToProps)(tokenPurchaseForm)
+const TokenPurchaseFormContainer = compose(
+  modalDecorator({name: MODALS.TOKEN_PURCHASE_FORM}),
+  connect(MapStateToProps, mapDispatchToProps),
+  reduxForm({ form: 'tokenPurchase'}),
+)(tokenPurchaseForm);
 
-export default modalDecorator({name: MODALS.TOKEN_PURCHASE_FORM})(TokenPurchaseFormContainer);
+export default TokenPurchaseFormContainer;
