@@ -1,7 +1,4 @@
 import Web3 from 'web3';
-import store from '../redux/store';
-import { setWeb3Provider } from '../redux/modules/metaMask/metaMaskActions';
-import { NotificationManager } from 'react-notifications';
 
 const web3Initialization = () => {
   return new Promise((resolve, reject) => {
@@ -11,8 +8,7 @@ const web3Initialization = () => {
       if (localWeb3.currentProvider.isMetaMask) {
         localWeb3.eth.getAccounts((error, accounts) => {
           if (accounts.length === 0) {
-            NotificationManager.warning('There are no active accounts in MetaMask.', 'Metamask warning', 10000);
-            reject();
+            reject('There are no active accounts in MetaMask.');
           }
           else {
             localWeb3.eth.defaultAccount = accounts[0];
@@ -20,12 +16,10 @@ const web3Initialization = () => {
           }
         });
       } else {
-        NotificationManager.warning('Different web3 provider. Please use Metamask.', 'Metamask warning', 10000);
-        reject();
+        reject('Different web3 provider. Please use Metamask.');
       }
     } else {
-      NotificationManager.warning('No web3 provider. Please use Metamask.', 'Metamask warning', 10000);
-      reject();
+      reject('No web3 provider. Please use Metamask.');
     }
   });
 };

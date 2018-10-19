@@ -1,6 +1,7 @@
 
 import CONSTANTS from './crowdsaleConstants';
 import dateFns from 'date-fns';
+import { notifSend } from 'redux-notifications/lib/actions';
 import contractAddresses from '../../../helpers/contractAddress';
 
 export const getCrowdsaleDetails = () => async (dispatch, getState) => {
@@ -62,16 +63,22 @@ export const getUserBalance = () => async (dispatch, getState) => {
   });
 };
 
-//TODO add exception handler
 export const purchaseTokens = (tokenAmount) => async (dispatch, getState) => {
   const { currentAccount, localWeb3 } = getState().metaMask;
   const { currentTokenPrice } = getState().crowdsale.crowdsaleDetails;
   const eth = parseFloat(tokenAmount / currentTokenPrice).toString(10);
+  try {
+    await localWeb3.eth.sendTransaction({ from: currentAccount, to: contractAddresses.sunmaitCrowdsale, value: localWeb3.utils.toWei(eth)});
 
-  await localWeb3.eth.sendTransaction({ from: currentAccount, to: contractAddresses.sunmaitCrowdsale, value: localWeb3.utils.toWei(eth)});
-
-  dispatch({
-    type: CONSTANTS.ADD_TOKENS_TO_BALANCE,
-    payload: tokenAmount,
-  });
+    dispatch({
+      type: CONSTANTS.ADD_TOKENS_TO_BALANCE,
+      payload: tokenAmount
+    });
+  } catch (error) {
+    dispatch(notifSend({
+      message: 'Transaction failed. Please try again later',
+      kind: 'warning',
+      dismissAfter: 2000
+    }));
+  }
 }

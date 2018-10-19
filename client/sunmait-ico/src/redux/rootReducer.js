@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form'
+import { reducer as notifReducer } from 'redux-notifications';
 import metaMask from './modules/metaMask/metaMaskReducer';
 import contracts from './modules/contracts/contractsReducer';
 import crowdsale from './modules/crowdsale/crowdsaleReducer';
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   crowdsale,
   modal,
   form: formReducer,
+  notifs: notifReducer
 });
 
 export default rootReducer;
