@@ -10,17 +10,21 @@ import Typography from '@material-ui/core/Typography';
 import { Field } from 'redux-form'
 import TextFieldInput from '../../inputs/textFieldInput';
 
-const tokenPurchaseForm = ({ isOpen, tokenAmount, toggleModal, purchaseTokens, resetForm }) => {
+const tokenPurchaseForm = ({ isOpen, formValues, ethPrice, toggleModal, purchaseTokens, resetForm }) => {
   const handleCancel = () => {
     resetForm();
     toggleModal(MODALS.TOKEN_PURCHASE_FORM);
   };
 
   const handleSubmit = async () => {
-    await purchaseTokens(tokenAmount);
+    await purchaseTokens(formValues.tokens);
     resetForm();
     toggleModal(MODALS.TOKEN_PURCHASE_FORM);
   };
+
+  const getPriceInUSD = () => (
+    formValues.eth ? formValues.eth * ethPrice.USD : 0
+  );
   
   return (
     <Dialog
@@ -39,7 +43,12 @@ const tokenPurchaseForm = ({ isOpen, tokenAmount, toggleModal, purchaseTokens, r
             <Field name="tokens" label="amount of tokens" component={TextFieldInput} type="text" />
           </div>
           <div>
-            <Field name="eth" label="price in eth" component={TextFieldInput} type="text" />
+            <Field
+              name="eth"
+              label="price in ETH"
+              helperText={`Price in USD: ${getPriceInUSD()}`}
+              component={TextFieldInput} type="text"
+            />
           </div>
         </form>
       </DialogContent>

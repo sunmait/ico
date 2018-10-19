@@ -62,6 +62,7 @@ export const getUserBalance = () => async (dispatch, getState) => {
   });
 };
 
+//TODO add exception handler
 export const purchaseTokens = (tokenAmount) => async (dispatch, getState) => {
   const { currentAccount, localWeb3 } = getState().metaMask;
   const { currentTokenPrice } = getState().crowdsale.crowdsaleDetails;

@@ -9,6 +9,7 @@ const textFieldInput = (props) => {
           value={props.input.value}
           margin="normal"
           onChange={props.input.onChange}
+          helperText={props.helperText}
         />
   );
 };

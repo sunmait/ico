@@ -1,12 +1,7 @@
 async function getEthPrice() {
-    const response = await fetch('https://api.coinmarketcap.com/v2/ticker/1/?convert=ETH');
-    const data = await response.json();
-    
-    const BTCPrice = data.data.quotes.USD.price;
-    const ETHRatio = data.data.quotes.ETH.price;
-    const ETHPrice = BTCPrice / ETHRatio;
+    const EthereumPrice = await (await fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')).json();
 
-    return ETHPrice;
+    return EthereumPrice;
 }
 
 export default getEthPrice;

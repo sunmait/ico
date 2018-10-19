@@ -3,7 +3,9 @@ import CONSTANTS from './metaMaskConstants';
 const defaultState = {
   providerConnected: false,
   currentAccount: null,
-  ethPrice: null,
+  ethPrice: {
+    USD: 0
+  },
   localWeb3: null
 };
 

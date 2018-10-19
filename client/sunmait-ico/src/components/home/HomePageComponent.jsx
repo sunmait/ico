@@ -73,7 +73,7 @@ class HomePageComponent extends Component {
               Current phase: {status}
             </Typography>
             <Typography variant="h5" align="center">
-              Token price: <span>{currentTokenPrice}</span>
+              Tokens per eth: <span>{currentTokenPrice}</span>
             </Typography>
           </div>
           <div className={classes.container}>
@@ -85,7 +85,7 @@ class HomePageComponent extends Component {
                       Phase 1
                     </Typography>
                     <Typography variant="overline" align="center">
-                      token price: {phase1TokenPrice}
+                      tokens per eth: {phase1TokenPrice}
                     </Typography>
                     <Typography className={classes.inlineTypography} variant="overline" align="center">
                       start date: {startDate}
@@ -103,7 +103,7 @@ class HomePageComponent extends Component {
                       Phase 2
                     </Typography>
                     <Typography variant="overline" align="center">
-                      token price: {phase2TokenPrice}
+                      tokens per eth: {phase2TokenPrice}
                     </Typography>
                     <Typography className={classes.inlineTypography} variant="overline" align="center">
                       start date: {phase1EndDate}

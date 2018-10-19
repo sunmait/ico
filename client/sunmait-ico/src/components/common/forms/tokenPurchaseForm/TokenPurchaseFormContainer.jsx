@@ -10,8 +10,8 @@ const selector = formValueSelector('tokenPurchase');
 const resetForm = () => reset('tokenPurchase');
 
 const MapStateToProps = state => ({
-  tokenAmount: selector(state, 'tokens'),
-  exchangeRate: state.crowdsale.crowdsaleDetails.currentTokenPrice
+  formValues: selector(state, 'tokens', 'eth'),
+  ethPrice: state.metaMask.ethPrice
 });
 
 const mapDispatchToProps = {
